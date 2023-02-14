@@ -14,7 +14,7 @@ func TestPaymentNow(t *testing.T) {
 
 	// ข้อมูลถูกต้องหมดทุก field
 	payment := Payment{
-		PaymentTime: time.Now(),
+		PaymentTime: time.Now().Add(24 * time.Hour),
 		Total:       100,
 	}
 	// ตรวจสอบด้วย govalidator
@@ -29,14 +29,14 @@ func TestPaymentNow(t *testing.T) {
 }
 
 // ตรวจสอบค่าว่างของTotalแล้วต้องเจอ Error
-func TestTotalNotBlank(t *testing.T) {
+func TestTotal(t *testing.T) {
 	g := NewGomegaWithT(t)
-	fixture := []uint{
+	fixture := []int{
 		11223, 23453,
 	}
 	for _, amount := range fixture {
 		payment := Payment{
-			PaymentTime: time.Now(),
+			PaymentTime: time.Now().Add(24 * time.Hour),
 			Total:       amount, // ผิด
 		}
 
@@ -51,7 +51,7 @@ func TestTotalNotBlank(t *testing.T) {
 		g.Expect(err).ToNot(BeNil())
 
 		// err.Error ต้องมี error message แสดงออกมา
-		g.Expect(err.Error()).To(Equal("Total cannot be zero"))
+		g.Expect(err.Error()).To(Equal("The value must be in range 1-9999"))
 	}
 
 }
@@ -60,7 +60,7 @@ func TestPaymentTimeNotNow(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	payment := Payment{
-		PaymentTime: time.Date(2020, 1, 1, 12, 00, 00, 00, time.UTC), //ผิด
+		PaymentTime: time.Now().Add(-24 * time.Hour), //ผิด
 		Total:       100,
 	}
 

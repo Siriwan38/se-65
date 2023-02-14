@@ -176,7 +176,7 @@ export default function PaymentCreate() {
             setSuccess(true);
           } else {
             setError(true);
-            if (res.error == "Total cannot be zero") {
+            if (res.error == "The value must be in range 1-9999") {
               setErrorMessage("กรุณาเลือกรายการใหม่")
             }
             else if (res.error == "The data recorder should be a Cashier") {
