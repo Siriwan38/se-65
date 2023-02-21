@@ -9,10 +9,6 @@ import (
 type TreatmentRecord struct {
 	gorm.Model
 
-	// //PatientID เป็น FK
-	PatientRegisterID *uint
-	PatientRegister   PatientRegister `gorm:"references:id" valid:"-"`
-
 	//DoctorID เป็น FK
 	DoctorID *uint
 	Doctor   Employee `gorm:"references:id" valid:"-"`
@@ -21,17 +17,13 @@ type TreatmentRecord struct {
 	DiagnosisRecordID *uint
 	DiagnosisRecord   DiagnosisRecord `gorm:"references:id" valid:"-"`
 
-	Treatment   string
-	Note        string
+	Treatment   string `valid:"required~Treatment cannot be blank"`
+	Note        string `valid:"-"`
 	Appointment *bool
 
-	//MedicineID เป็น FK
-	MedicineID       *uint
-	Medicine         Medicine `gorm:"references:id" valid:"-"`
-	MedicineQuantity int
+	MedicineOrders []MedicineOrder `gorm:"foreignKey:TreatmentRecordID;  constraint:OnDelete:CASCADE"`
 
-	Date time.Time
-	// PatientRegisters []PatientRegister `gorm:"foreignKey:TreatmentRecordID"`
+	Date time.Time `valid:"present~Date must be present"`
 }
 
 type Medicine struct {
@@ -39,19 +31,19 @@ type Medicine struct {
 
 	Name        string
 	Description string
-	Price       int
+	Price       float32
 
-	TreatmentRecords []TreatmentRecord `gorm:"foreignKey:MedicineID"`
+	MedicineOrder []MedicineOrder `gorm:"foreignKey:MedicineID"`
 }
 
-// type MedicineItem struct {
-// 	gorm.Model
+type MedicineOrder struct {
+	gorm.Model
 
-// 	//MedicineID เป็น FK
-// 	MedicineID *uint    `gorm:"uniquelndex"`
-// 	Medicine   Medicine `gorm:"references:id" valid:"-"`
+	OrderAmount int `valid:"int, range(0|100)~Order Amount must not be negative"`
 
-// 	TreatmentRecordID *uint
-// 	TreatmentRecord   TreatmentRecord `gorm:"references:id" valid:"-"`
+	MedicineID *uint
+	Medicine   Medicine `gorm:"refernces:ID" valid:"-"`
 
-// }
+	TreatmentRecordID *uint
+	TreatmentRecord   TreatmentRecord `gorm:"references:ID" valid:"-"`
+}

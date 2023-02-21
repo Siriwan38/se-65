@@ -2,7 +2,7 @@ import React from "react";
 import { SigninInterface } from "../models/ISignin";
 
 import {  TreatmentRecordsInterface } from "../models/ITreatmentRecord";
-import { EmployeesInterface } from "../models/IEmployee";
+
 
 const apiUrl = "http://localhost:8080";
 
@@ -52,6 +52,27 @@ async function GetTreatmentRecord() {
   return res;
 }
 
+async function GetTreatmentRecordforMed(TreatmentRecordID: number) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/treatmentrecord/medicineorder/${TreatmentRecordID}`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.data) {
+        return res.data;
+      } else {
+        return false;
+      }
+    });
+
+  return res;
+}
 async function GetNote() {
   const requestOptions = {
     method: "GET",
@@ -124,4 +145,5 @@ export {
   GetTreatment,
   GetTreatmentRecord,
   CreateTreatmentRecord,
+  GetTreatmentRecordforMed,
 };

@@ -168,6 +168,8 @@ func main() {
 			protected.DELETE("/medicines/:id", controller_diagnosisrecord.DeleteMedicine)
 
 			// TreatmentRecord Routes
+
+			protected.GET("/treatmentrecord/medicineorder/:id", controller_treatmentrecord.GetTreatmentRecordforMed)
 			protected.POST("/createmtreatmentrecord", controller_treatmentrecord.CreateTreatmentRecord)
 			protected.GET("/treatmentrecords", controller_treatmentrecord.ListTreatmentRecords)
 			protected.GET("/treatmentrecord/:id", controller_treatmentrecord.GetTreatmentRecord)
@@ -239,7 +241,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE, PATCH")
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return

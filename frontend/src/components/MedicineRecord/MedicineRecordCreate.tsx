@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import Container from "@mui/material/Container";
@@ -30,16 +30,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   GetEmployee,
   GetStatusMed,
-
-  CreateMedicineRecords
+  GetMedicineRecordById,
+  CreateMedicineRecords,
+  GetMedicineRecord
 } from "../../services/HttpClientServiceMedicineRecord";
-import { GetTreatmentRecord } from "../../services/HttpClientServiceTreatmentRecord";
+import { GetTreatmentRecord,GetTreatmentRecordforMed } from "../../services/HttpClientServiceTreatmentRecord";
 import { MedicineRecordsInterface, StatusMedsInterface } from "../../models/IMedicineRecord";
-import { TreatmentRecordsInterface } from "../../models/ITreatmentRecord";
-
+import { TreatmentRecordsInterface, MedicineOrdersInterface } from "../../models/ITreatmentRecord";
 import { EmployeesInterface } from "../../models/IEmployee";
-
-
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -50,17 +48,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 function MedicineRecordCreate() {
   // Main State For Create Data to Database
-  const [medicinerecords, setMedicineRecord] = React.useState<Partial<MedicineRecordsInterface>>({
-    MedTime: new Date(), TreatmentRecordID: 0, StatusMedID: 0, Advicetext: "",
-  }
-  );
+  const params = useParams();
   // For Set treatmentrecord Relation In Database and Display In ComboBox
   const [treatmentrecords, setTreatmentRecord] = React.useState<TreatmentRecordsInterface[]>([]);
   const [statusmed, setStatusMed] = React.useState<StatusMedsInterface[]>([]);
+  const [medicineorder, setMedicineOrder] = React.useState<MedicineOrdersInterface[]>([]);
   // Set a one because Employee will Login only one don't set a Other Employee
   const [pharmacist, setEmployee] = React.useState<EmployeesInterface>();
-
-
+  const [medicinerecords, setMedicineRecord] = React.useState<Partial<MedicineRecordsInterface>>({
+    MedTime: new Date(), TreatmentRecordID: 0, StatusMedID: 0, Advicetext: "",
+  });
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -82,6 +79,9 @@ function MedicineRecordCreate() {
       ...medicinerecords,
       [name]: event.target.value,
     });
+    if (name === "TreatmentRecordID") {
+      getTreatmentRecordforMed( Number(event.target.value));
+  }
   };
 
   const handleInputChange = (
@@ -92,13 +92,6 @@ function MedicineRecordCreate() {
     setMedicineRecord({ ...medicinerecords, [id]: value });
   };
 
-  const removeFromItem = (index: number) => {
-    let updatedItem = treatmentrecords.filter((_, i) => i !== index);
-    setTreatmentRecord(updatedItem);
-  }
-
-
-
   const getTreatmentRecord = async () => {
     let res = await GetTreatmentRecord()
     if (res) {
@@ -106,8 +99,13 @@ function MedicineRecordCreate() {
       console.log(treatmentrecords)
     }
   }
-
-
+  const getTreatmentRecordforMed = async (TreatmentRecordID: number) => {
+    let res = await GetTreatmentRecordforMed(TreatmentRecordID)
+    if (res) {
+      setMedicineOrder(res);
+      // console.log(statusmed)
+    }
+  }
   const getStatusMed = async () => {
     let res = await GetStatusMed()
     if (res) {
@@ -116,8 +114,6 @@ function MedicineRecordCreate() {
     }
   }
   console.log(statusmed)
-
-
   const getEmployee = async (ID: string | null) => {
     let res = await GetEmployee()
     if (res) {
@@ -125,13 +121,13 @@ function MedicineRecordCreate() {
     }
   }
 
-
-
-  useEffect(() => {
-    getTreatmentRecord();
-    getStatusMed();
-    getEmployee(localStorage.getItem("id"));
-  }, []);
+  const getMedicineRecord = async (id: string) => {
+    let res = await GetMedicineRecordById(id)
+    if (res) {
+      setMedicineRecord(res)
+      console.log(medicinerecords)
+    }
+  }
 
   const convertType = (data: string | number | undefined) => {
     let val = typeof data === "string" ? parseInt(data) : data;
@@ -149,7 +145,7 @@ function MedicineRecordCreate() {
     }
     else{
       setError(false)
-      let data = {
+      let data: any = {
       
         TreatmentRecordID: convertType(medicinerecords.TreatmentRecordID),
         StatusMedID: convertType(medicinerecords.StatusMedID),
@@ -157,10 +153,13 @@ function MedicineRecordCreate() {
         Advicetext: medicinerecords.Advicetext,
         MedTime: medicinerecords.MedTime,
       };
-  
+      if (params.id){
+        data["ID"] = parseInt(params.id);
+      }
+
       const apiUrl = "http://localhost:8080/createmedicinerecord";
       const requestOptions = {
-        method: "POST",
+        method: params.id ? "PATCH" : "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
@@ -195,6 +194,16 @@ function MedicineRecordCreate() {
     
     
   }
+  useEffect(() => {
+    getTreatmentRecord();
+    getStatusMed();
+    getEmployee(localStorage.getItem("id"));
+    console.log(params.id);
+    
+    if (params.id){
+      getMedicineRecord(params.id)
+    }
+  }, []);
 
 
   return (
@@ -341,17 +350,20 @@ function MedicineRecordCreate() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" width="10%">ใบผลการรักษา</TableCell>
-                    <TableCell align="center" width="10%">=ชื่อ</TableCell>
+                    <TableCell align="center" width="10%">ชื่อ</TableCell>
+                    <TableCell align="center" width="10%">จำนวน</TableCell>
                     <TableCell align="center" width="10%">ราคา</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {treatmentrecords.map((row: TreatmentRecordsInterface, index) => {
+                  
+                  {medicineorder.map((row: MedicineOrdersInterface, index) => {
                     return (
                       <TableRow key={index}>
                         <TableCell align="center">{row.MedicineID}</TableCell>
-                        <TableCell align="center">{treatmentrecords.find(p => p.ID === row.MedicineID)?.Medicine?.Name}</TableCell>
-                        <TableCell align="center">{treatmentrecords.find(p => p.ID === row.MedicineID)?.Medicine?.Price}</TableCell>
+                        <TableCell align="center">{row.Medicine?.Name}</TableCell>
+                        <TableCell align="center">{row.OrderAmount}</TableCell>
+                        <TableCell align="center">{row.Medicine?.Price}</TableCell>
                         {/* <TableCell width="5%"><IconButton size="small" onClick={() => removeFromItem(index)}><DeleteIcon /></IconButton></TableCell> */}
 
                       </TableRow>

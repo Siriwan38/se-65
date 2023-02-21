@@ -50,6 +50,28 @@ async function GetMedicineRecord() {
 
   return res;
 }
+async function GetMedicineRecordById(id: string) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/medicinerecords/${id}`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.data) {
+        return res.data;
+      } else {
+        return false;
+      }
+    });
+
+  return res;
+}
+
 
 
 async function GetEmployee() {
@@ -125,11 +147,9 @@ async function CreateMedicineRecords(data: MedicineRecordsInterface) {
 
 export {
   Login,
-  // GetUsers,
-  // GetVideos,
   GetMedicineRecord,
   GetStatusMed,
   GetEmployee,
-  // CreateUser,
   CreateMedicineRecords,
+  GetMedicineRecordById,
 };

@@ -14,7 +14,7 @@ func TestPaymentNow(t *testing.T) {
 
 	// ข้อมูลถูกต้องหมดทุก field
 	payment := Payment{
-		PaymentTime: time.Now().Add(24 * time.Hour),
+		PaymentTime: time.Now(),
 		Total:       100,
 	}
 	// ตรวจสอบด้วย govalidator
@@ -36,7 +36,7 @@ func TestTotal(t *testing.T) {
 	}
 	for _, amount := range fixture {
 		payment := Payment{
-			PaymentTime: time.Now().Add(24 * time.Hour),
+			PaymentTime: time.Now(),
 			Total:       amount, // ผิด
 		}
 
@@ -60,7 +60,7 @@ func TestPaymentTimeNotNow(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	payment := Payment{
-		PaymentTime: time.Now().Add(-24 * time.Hour), //ผิด
+		PaymentTime: time.Date(2022, 1, 1, 12, 00, 00, 00, time.UTC), //ผิด
 		Total:       100,
 	}
 

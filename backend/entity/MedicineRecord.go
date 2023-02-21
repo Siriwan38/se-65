@@ -23,21 +23,21 @@ type MedicineRecord struct {
 	//statusMedID ทำหน้าที่เป็น ForeignKey
 	StatusMedID *uint
 	StatusMed   StatusMed `gorm:"references:id" valid:"-"`
-	Payments    []Payment `gorm:"foreignKey:MedicineRecordID"`
+	Payments    []Payment `gorm:"foreignKey:MedicineRecordID" valid:"-"`
 }
 type StatusMed struct {
 	gorm.Model
 	Number uint
-	Status string `valid:"matches(^[1-9]\\d{7}$),required"`
+	Status string `valid:"matches(^[1-9]\\d{7}$),required" `
 
 	// 1 statusMed มีได้หลาย MedicineRecord
-	MedicineRecords []MedicineRecord `gorm:"foreignKey: StatusMedID"`
+	MedicineRecords []MedicineRecord `gorm:"foreignKey: StatusMedID" valid:"-"`
 }
 
 func init() {
 
 	govalidator.CustomTypeTagMap.Set("Total", func(i interface{}, context interface{}) bool {
-		return govalidator.InRangeInt(int(i.(uint)), 1, 9999)
+		return govalidator.InRangeInt(int(i.(int)), 1, 9999)
 	})
 
 	govalidator.CustomTypeTagMap.Set("customPositiveNumber", func(i interface{}, context interface{}) bool {
@@ -56,7 +56,7 @@ func init() {
 
 	govalidator.CustomTypeTagMap.Set("present", func(i interface{}, o interface{}) bool {
 		t := i.(time.Time)
-		// ปัจจุบัน บวกลบไม่เกิน 12 ชั่วโมง
+		// ปัจจุบัน บวกลบไม่เกิน 5 ชั่วโมง
 		return t.After(time.Now().Add(time.Hour*-5)) && t.Before(time.Now().Add(time.Hour*5))
 	})
 	// govalidator.CustomTypeTagMap.Set("Now", func(i interface{}, context interface{}) bool {

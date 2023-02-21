@@ -6,9 +6,6 @@ import { EmployeesInterface } from "./IEmployee";
 export interface TreatmentRecordsInterface {
     ID: number;
 
-    PatientRegisterID?: number;
-	PatientRegister?: PatientRegistersInterface;
-
 	DoctorID?: number;
 	Doctor?: EmployeesInterface;
 
@@ -17,8 +14,10 @@ export interface TreatmentRecordsInterface {
 
     MedicineID?: number;
     Medicine?:   MedicinesInterface;
+
+    MedicineOrders?: MedicineOrdersInterface[];
     
-    MedicineQuantity?: number;
+   
     Treatment?: string;
     Note?: string;
     Appointment?: boolean;//int;
@@ -31,4 +30,14 @@ export interface MedicinesInterface {
     Name?: string;
     Description?: string;
     Price?: number;
+}
+
+export interface MedicineOrdersInterface {
+    ID: number;
+    OrderAmount?: number;
+    MedicineID?: number;
+    Medicine?:   MedicinesInterface;
+    TreatmentRecordID?: number;
+    TreatmentRecord?: TreatmentRecordsInterface;
+
 }

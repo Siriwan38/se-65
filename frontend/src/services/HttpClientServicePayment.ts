@@ -50,6 +50,27 @@ async function GetPayment() {
   return res;
 }
 
+async function GetPaymentById(id: string) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/payments/${id}`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.data) {
+        return res.data;
+      } else {
+        return false;
+      }
+    });
+
+  return res;
+}
 async function GetPaymentType() {
   const requestOptions = {
     method: "GET",
@@ -127,4 +148,5 @@ export {
   GetPaymentType,
   GetEmployee,
   CreatePayments,
+  GetPaymentById,
 };
