@@ -10,11 +10,11 @@ import (
 type MedicineRecord struct {
 	gorm.Model
 
-	MedTime    time.Time `valid:"present~MedTime must be in the present"`
+	MedTime    time.Time `valid:"present~MedTime incorrect"`
 	Advicetext string    `valid:"required~Advicetext cannot be blank"`
 	// EmployeeID ทำหน้าที่เป็น FK
-	PharmacistID *uint
-	Pharmacist   Employee `gorm:"references:id" valid:"-"`
+	EmployeeID *uint
+	Employee   Employee `gorm:"references:ID"`
 
 	//TreatmentRecordID ทำหน้าที่เป็น ForeignKey
 	TreatmentRecordID *uint

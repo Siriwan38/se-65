@@ -64,6 +64,5 @@ func Login(c *gin.Context) {
 		Token: signedToken,
 		ID:    Employee.ID,
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
 }

@@ -53,10 +53,12 @@ export default function PaymentCreate() {
 
   const [selectedPatientRight, setSelectedPatientRight] = React.useState<PatientRightsInterface>();
   const [payments, setPayment] = React.useState<Partial<PaymentsInterface>>(
-    { PatientRightID: 0, PaymentTypeID: 0, PaymentTime: new Date(), Total: 0, });
+    { MedicineRecordID:0, PatientRightID: 0, PaymentTypeID: 0, PaymentTime: new Date(), Total: 0, });
   const [success, setSuccess] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
+
+  console.log(payments)
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -73,6 +75,7 @@ export default function PaymentCreate() {
     const name = event.target.name as keyof typeof payments;
     console.log("handleChage")
     console.log(event.target.value)
+
    
     setPayment({
       ...payments,
@@ -124,6 +127,8 @@ export default function PaymentCreate() {
       console.log(res, "jawooo")
     }
   }
+
+
   const getEmployee = async (ID: string | null) => {
     let res = await GetEmployee()
     if (res) {
@@ -134,6 +139,8 @@ export default function PaymentCreate() {
     let res = await GetPaymentById(id)
     if (res) {
       setPayment(res)
+      // setMedicineOrder(res.medicinerecords.TreatmentRecord.medicineorder);
+      // console.log(medicineorder)
       console.log(res)
     }
   }
@@ -164,16 +171,23 @@ export default function PaymentCreate() {
       let data: any = {
         MedicineRecordID: convertType(payments.MedicineRecordID),
         PatientRightID: convertType(payments.PatientRightID),
-        CashierID: cashiers?.ID,
+        EmployeeID: convertType(cashiers?.ID),
         PaymentTypeID: convertType(payments.PaymentTypeID),
         PaymentTime: payments.PaymentTime,
         Total: payments.Total,
       };
+      console.log(data);
+      
+      let apiUrl : any
       if (params.id){
         data["ID"] = parseInt(params.id);
+        apiUrl = "http://localhost:8080/payments"
+      }
+      else{
+        apiUrl = "http://localhost:8080/createpayment"
       }
 
-      const apiUrl = `http://localhost:8080/createpayment`;
+      // const apiUrl = `http://localhost:8080/createpayment`;
       const requestOptions = {
         method: params.id ? "PATCH" : "POST",
         headers: {
@@ -235,6 +249,8 @@ export default function PaymentCreate() {
       
   }, [selectedPatientRight, medicineorder]);
 
+  console.log(payments);
+  
   return (
     <Container sx={{ marginTop: 2 }}>
       <Snackbar
@@ -282,7 +298,7 @@ export default function PaymentCreate() {
               <p>ชื่อ - นามสกุล</p>
               <Select
                 native
-                value={payments.MedicineRecordID + ""}
+                value={payments?.MedicineRecordID + ""}
                 onChange={handleChange}
                 inputProps={{
                   name: "MedicineRecordID",
@@ -371,10 +387,10 @@ export default function PaymentCreate() {
                 <TableBody>
                   {medicineorder.map((row: MedicineOrdersInterface, index) => {
                     // sumTotalPrice()
-                    if (payments.MedicineRecordID == row.ID)
+                    if (payments?.MedicineRecordID == row.ID)
                       return (
                       <TableRow key={index}>
-                        <TableCell align="center">{row.Medicine?.Name}</TableCell>
+                        <TableCell  align="center">{row.Medicine?.Name}</TableCell>
                         <TableCell align="center">{row!.Medicine!.Price! * row!.OrderAmount!}</TableCell>
                           {/* <TableCell width="5%"><IconButton size="small" onClick={() => removeFromItem(index)}><DeleteIcon /></IconButton></TableCell> */}
 

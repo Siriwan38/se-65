@@ -18,7 +18,7 @@ type Disease struct {
 type DiagnosisRecord struct {
 	gorm.Model
 
-	//PartientID เป็น FK
+	// //PartientID เป็น FK
 	PatientRegisterID *uint
 	PatientRegister   PatientRegister `gorm:"references:ID"`
 

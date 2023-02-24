@@ -54,50 +54,7 @@ export default function Home() {
                 <Divider />
 
 
-                {/* เมื่อมีการตรวจสอบ token ใน local storage ขณะที่ผู้ใช้อยู่หน้า Home  */}
-                {token ? (
-                    <div>
-                        {/* หากพบว่ามี token อยู่ใน local storage ที่หน้า Home จะทำการแสดงปุ่ม log out และ show user */}
-                        <Box display="flex" sx={{ marginTop: 2, padding: 2 }}>
-                            <Box flexGrow={1}>
-                                <Button
-                                    variant="contained"
-                                    color="error"
-                                    onClick={logOut}
-                                >
-                                    Log out
-                                </Button>
-                            </Box>
-                            <Box>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    component={RouterLink}
-                                    to="/patient"
-                                >
-                                    Show User
-                                </Button>
-                            </Box>
-                        </Box>
-                    </div>
-                ) : (
-                    <div>
-                        {/* หากพบว่าไม่มี token อยู่ใน local storage ที่หน้า Home จะทำการแสดงปุ่ม log in และ register แทน */}
-                        <Box display="flex" sx={{ marginTop: 2, padding: 2 }}>
-                            <Box flexGrow={1}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    component={RouterLink}
-                                    to="/login"
-                                >
-                                    Log in
-                                </Button>
-                            </Box>
-                        </Box>
-                    </div>
-                )}
-            </Paper>
+                </Paper>
         </Container>
     )
 }

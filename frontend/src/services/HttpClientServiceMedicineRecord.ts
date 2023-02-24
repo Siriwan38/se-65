@@ -50,6 +50,10 @@ async function GetMedicineRecord() {
 
   return res;
 }
+
+
+
+
 async function GetMedicineRecordById(id: string) {
   const requestOptions = {
     method: "GET",
@@ -59,7 +63,7 @@ async function GetMedicineRecordById(id: string) {
     },
   };
 
-  let res = await fetch(`${apiUrl}/medicinerecords/${id}`, requestOptions)
+  let res = await fetch(`${apiUrl}/medicinerecord/${id}`, requestOptions)
     .then((response) => response.json())
     .then((res) => {
       if (res.data) {
@@ -75,7 +79,9 @@ async function GetMedicineRecordById(id: string) {
 
 
 async function GetEmployee() {
-  let id = localStorage.getItem("uid");
+  let id = localStorage.getItem("id");
+  console.log(id);
+  
   const requestOptions = {
     method: "GET",
     headers: {

@@ -21,15 +21,14 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 function MedicineRecords() {
   const [medicinerecord, setMedicineRecords] = useState<MedicineRecordsInterface[]>([]);
+  // const [medicinerecordup, setMedicineRecordUp] = useState<MedicineRecordsInterface>();
   const [open, setOpen] = React.useState<boolean[]>([]);
 
 
   const [success, setSuccess] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  useEffect(() => {
-    getMedicineRecords();
-  }, []);
+  
 
   const getMedicineRecords = async () => {
     let res = await GetMedicineRecord();
@@ -38,7 +37,9 @@ function MedicineRecords() {
     } 
   };
 
-  
+  useEffect(() => {
+    getMedicineRecords();
+  }, []);
 
   const removeMedicineRecord= (id: number) => {
     console.log(id);
@@ -57,13 +58,39 @@ function MedicineRecords() {
         console.log(res.data);
         if (res.data) {
           setMedicineRecords(res.data);
+          window.location.reload();
+
         } else {
           console.log("else");
         }
       });
-      window.location.reload();
       handleCloseDialog(id);
   }
+  // const updateMedicineRecord= (id: number) => {
+  //   console.log(id);
+  //   const apiUrl = "http://localhost:8080";
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     "Content-Type": "application/json",
+  //     },
+  //   };
+
+  //   fetch(`${apiUrl}/medicinerecordsgetupdate/`+id, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       if (res.data) {
+  //         setMedicineRecordUp(res.data);
+  //         window.location.reload();
+
+  //       } else {
+  //         console.log("else");
+  //       }
+  //     });
+  //     handleCloseDialog(id);
+  // }
 
   const checkOpen = (id: number): boolean => {
     return open[id] ? open[id] : false;
@@ -73,6 +100,7 @@ function MedicineRecords() {
     let openArr = [...open];
     openArr[id] = true;
     setOpen(openArr);
+    
   };
 
   const handleCloseDialog = (id: number) => {
@@ -106,7 +134,7 @@ function MedicineRecords() {
       field: "Pharmacist",
       headerName: "เภสัชกร",
       width: 150,
-      valueGetter: (params) => params.row.Pharmacist.FirstName,
+      valueGetter: (params) => params.row.Employee.FirstName,
     },
     {
       field: "Advicetext",

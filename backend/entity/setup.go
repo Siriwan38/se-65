@@ -184,22 +184,6 @@ func SetupDatabase() {
 	}
 	db.Model(&Medicine{}).Create(&medicine1)
 
-	// treatmentrecord1 := TreatmentRecord{
-	// 	PatientRegister: diagnosis1.HistorySheet.PatientRegister,
-	// 	Doctor:          Employee1,
-	// 	DiagnosisRecord: diagnosis1,
-
-	// 	MedicineQuantity: 5,
-	// 	Treatment:        "การจ่ายยา",
-	// 	Note:             "none",
-
-	// 	Medicine: medicine,
-	// 	// MedicinePrice: 100,
-	// 	Date: time.Now(),
-	// }
-
-	// db.Model(&TreatmentRecord{}).Create(&treatmentrecord1)
-
 	payment1 := PaymentType{
 		Type: "เงินสด",
 	}
@@ -241,7 +225,7 @@ func SetupDatabase() {
 	}
 	db.Model(&TreatmentRecord{}).Create(&treatmentrecord1)
 	medicinerecord1 := MedicineRecord{
-		Pharmacist:      Employee2,
+		Employee:        Employee2,
 		TreatmentRecord: treatmentrecord1,
 
 		StatusMed:  statusmed1,

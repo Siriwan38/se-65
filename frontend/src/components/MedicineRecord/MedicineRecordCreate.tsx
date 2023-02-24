@@ -96,13 +96,19 @@ function MedicineRecordCreate() {
     let res = await GetTreatmentRecord()
     if (res) {
       setTreatmentRecord(res)
-      console.log(treatmentrecords)
     }
   }
+
+  console.log("TreatmentRecordID: " + medicinerecords.TreatmentRecordID)
+
+
   const getTreatmentRecordforMed = async (TreatmentRecordID: number) => {
+
     let res = await GetTreatmentRecordforMed(TreatmentRecordID)
     if (res) {
+
       setMedicineOrder(res);
+
       // console.log(statusmed)
     }
   }
@@ -113,7 +119,7 @@ function MedicineRecordCreate() {
       // console.log(statusmed)
     }
   }
-  console.log(statusmed)
+
   const getEmployee = async (ID: string | null) => {
     let res = await GetEmployee()
     if (res) {
@@ -125,9 +131,10 @@ function MedicineRecordCreate() {
     let res = await GetMedicineRecordById(id)
     if (res) {
       setMedicineRecord(res)
-      console.log(medicinerecords)
+
     }
   }
+
 
   const convertType = (data: string | number | undefined) => {
     let val = typeof data === "string" ? parseInt(data) : data;
@@ -149,15 +156,20 @@ function MedicineRecordCreate() {
       
         TreatmentRecordID: convertType(medicinerecords.TreatmentRecordID),
         StatusMedID: convertType(medicinerecords.StatusMedID),
-        PharmacistID: convertType(pharmacist?.ID),
+        EmployeeID: convertType(pharmacist?.ID),
         Advicetext: medicinerecords.Advicetext,
         MedTime: medicinerecords.MedTime,
       };
+      let apiUrl : any
       if (params.id){
         data["ID"] = parseInt(params.id);
+        apiUrl = "http://localhost:8080/medicinerecord"
+      }
+      else{
+        apiUrl = "http://localhost:8080/createmedicinerecord"
       }
 
-      const apiUrl = "http://localhost:8080/createmedicinerecord";
+
       const requestOptions = {
         method: params.id ? "PATCH" : "POST",
         headers: {
@@ -181,9 +193,7 @@ function MedicineRecordCreate() {
             else if (res.error == "The data recorder should be a Pharmacist") {
               setErrorMessage(" ผู้บันทึกข้อมูลต้องเป็นเภสัชกรเท่านั้น")
             }
-            else if (res.error == "MedTime must be in the present") {
-              setErrorMessage(" กรุณาเลือกวันและเวลาปัจจุบัน")
-            }
+            
             
             else {
               setErrorMessage(res.error);
@@ -194,18 +204,22 @@ function MedicineRecordCreate() {
     
     
   }
+
+
+
   useEffect(() => {
     getTreatmentRecord();
     getStatusMed();
     getEmployee(localStorage.getItem("id"));
-    console.log(params.id);
-    
     if (params.id){
       getMedicineRecord(params.id)
     }
   }, []);
 
 
+ 
+
+  
   return (
     <Container maxWidth="md">
       <Snackbar
@@ -364,7 +378,6 @@ function MedicineRecordCreate() {
                         <TableCell align="center">{row.Medicine?.Name}</TableCell>
                         <TableCell align="center">{row.OrderAmount}</TableCell>
                         <TableCell align="center">{row.Medicine?.Price}</TableCell>
-                        {/* <TableCell width="5%"><IconButton size="small" onClick={() => removeFromItem(index)}><DeleteIcon /></IconButton></TableCell> */}
 
                       </TableRow>
                     )

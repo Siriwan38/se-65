@@ -17,8 +17,9 @@ export interface PaymentsInterface {
 
     Telephone : string,
     
-    CashierID : number,
-    Cashier : EmployeesInterface
+    EmployeeID : number,
+    Employee : EmployeesInterface
+    
     MedicineRecordID: number,
     MedicineRecord: MedicineRecordsInterface,
 

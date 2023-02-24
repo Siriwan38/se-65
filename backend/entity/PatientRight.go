@@ -19,6 +19,7 @@ type PatientRight struct {
 	PatientRegisterID *uint
 	PatientRegister   PatientRegister `gorm:"references:ID"`
 
+	// Createlimit   int16
 	PatientTypeID *uint
 	PatientType   PatientType
 

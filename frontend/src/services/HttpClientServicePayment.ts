@@ -59,7 +59,7 @@ async function GetPaymentById(id: string) {
     },
   };
 
-  let res = await fetch(`${apiUrl}/payments/${id}`, requestOptions)
+  let res = await fetch(`${apiUrl}/payment/${id}`, requestOptions)
     .then((response) => response.json())
     .then((res) => {
       if (res.data) {
@@ -94,7 +94,7 @@ async function GetPaymentType() {
   }
 
   async function GetEmployee() {
-    let id = localStorage.getItem("uid");
+    let id = localStorage.getItem("id");
     const requestOptions = {
       method: "GET",
       headers: {

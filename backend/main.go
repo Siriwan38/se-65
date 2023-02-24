@@ -182,8 +182,10 @@ func main() {
 			protected.POST("/createmedicinerecord", controller_medicinerecord.CreateMedicineRecord)
 			protected.GET("/medicinerecords", controller_medicinerecord.ListMedicineRecords)
 			protected.GET("/medicinerecord/:id", controller_medicinerecord.GetMedicineRecord)
+			protected.GET("/treatmentrecordbymed/:id", controller_medicinerecord.GetTreatmentRecordforMed)
 			protected.PATCH("/medicinerecord", controller_medicinerecord.UpdateMedicineRecord)
 			protected.DELETE("/medicinerecords/:id", controller_medicinerecord.DeleteMedicineRecord)
+			// protected.GET("/medicinerecordsgetupdate/:id", controller_medicinerecord.GetMedicineRecordsByupdate)
 
 			//StatusMed Routes
 			protected.GET("/statusmeds", controller_medicinerecord.ListStatusMeds)
@@ -221,7 +223,7 @@ func main() {
 			protected.PATCH("/payments", controller_payment.UpdatePayment)
 			protected.DELETE("/payments/:id", controller_payment.DeletePayment)
 
-			protected.DELETE("/medbypatien/:id", controller_payment.GetMedbyPatient)
+			protected.GET("/getmedbypatien/:id", controller_payment.GetMedbyPatient)
 
 		}
 	}

@@ -35,6 +35,8 @@ function Payments() {
       setPayment(res);
     } 
   };
+  console.log(payment);
+  
   const removePayment= (id: any) => {
     console.log(id);
     const apiUrl = "http://localhost:8080";
@@ -114,7 +116,7 @@ function Payments() {
       field: "Cashier",
       headerName: "เจ้าหน้าที่การเงิน",
       width: 150,
-      valueGetter: (params) => params.row.Cashier.FirstName,
+      valueGetter: (params) => params.row.Employee.FirstName,
     },
     { 
       field: "PaymentTime", 
